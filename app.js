@@ -1,30 +1,64 @@
 
 //marc copes
 
+function handleDragStart(e) {
+    this.style.opacity = '0.4';
+    console.log("Dragging...");
 
+    dragSrcEl = this;
 
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.innerHTML);
+}
 
-/////////////// code from discord, unsure how to implement
+function handleDragEnd(e) {
+    console.log("Dropped.");
+    this.style.opacity = '1';
+    
+}
 
-div.addEventListener('dragstart', () => {
-    div.classList.add('dragging');
-})
+function handleDragEnter(e) {
+    this.classList.add('over');
+    console.log("Hovering...");
 
-div.addEventListener('dragend', () => {
-    div.classList.remove('dragging');
-})
+  }
 
-div.addEventListener('dragover', e => {
-    e.preventDefault()
-    const dragCard = document.querySelector('.dragging')
-})
+  function handleDragLeave(e) {
+    this.classList.remove('over');
+    console.log("No longer hovering.");
 
+  }
 
-// this doesn't implement the moving you will need to use the following
+  function handleDragOver(e) {
+    if (e.preventDefault) {
+      e.preventDefault();
+    }
+    return false;
+  }
 
-draggingDiv.parentNode.insertBefore(draggingDiv, hoverDiv);
+  function handleDrop(e) {
+    e.stopPropagation();
+  
+      if (dragSrcEl !== this) {
+        dragSrcEl.innerHTML = this.innerHTML;
+        this.innerHTML = e.dataTransfer.getData('text/html');
+      }
+  
+      return false;
+    }
 
-//////////////
+function createDragAndDropListeners() {
+    let items = document.querySelectorAll("#characterDivProperties");
+    items.forEach(function(item) {
+        item.addEventListener('dragstart', handleDragStart, false);
+        item.addEventListener('dragover', handleDragOver, false);
+        item.addEventListener('dragenter', handleDragEnter, false);
+        item.addEventListener('dragleave', handleDragLeave, false);
+        item.addEventListener('dragend', handleDragEnd, false);
+        item.addEventListener('drop', handleDrop, false);
+
+    });
+}
 
 
 
@@ -61,12 +95,19 @@ function submitEvent(event) {
         let char = result.results[i].properties;
         let characterDiv = document.createElement("div");
         characterDiv.id = "characterDivProperties";
+        characterDiv.draggable = true;
+
+        
+
 
         fetch(char.homeworld)
         .then(function(response) {
             return response.json()
         })
         .then(function(result) {
+
+
+            createDragAndDropListeners();
 
             let html = "<h2 id=\"characterName\">"+char.name+"</h2>"
             html += "<div id=\"characterWorld\">"+result.result.properties.name+"</div>";
@@ -75,9 +116,12 @@ function submitEvent(event) {
             html += "<div id=\"characterDetails\"><li>Eye Colour: "+char.eye_color+"</li></div>"
             html += "</ul>"
             characterDiv.innerHTML = html;
+            
             resultsDiv.appendChild(characterDiv);
 
             //add gif
+
+           
 
             getGif("https://api.giphy.com/v1/gifs/search?api_key=J1noCVxuNpIkjrmWc9LZUCtzfUezIF8D&q="+char.name+"&limit=1&offset=0&rating=g&lang=en", function(result) {
                 result.data.forEach((gif) => {
@@ -86,23 +130,31 @@ function submitEvent(event) {
                     let img = document.createElement("img");
                     img.src = result.data[0].images.original.url;
                     img.id = "characterGif";
+                    img.draggable = false;
                     characterDiv.appendChild(img);
 
                     //profile circle gif
                     let prof = document.createElement("img");
                     prof.src = result.data[0].images.original.url;
                     prof.id = "characterProfile";
+                    prof.draggable = false;
                     characterDiv.appendChild(prof);
                     
                 })
                 
             });
 
+            
 
             });
+            
        }
+
+       
         
     });
+
+    
 }
 
 form.addEventListener("submit", submitEvent);
