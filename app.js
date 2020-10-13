@@ -1,6 +1,33 @@
 
 //marc copes
 
+
+
+
+/////////////// code from discord, unsure how to implement
+
+div.addEventListener('dragstart', () => {
+    div.classList.add('dragging');
+})
+
+div.addEventListener('dragend', () => {
+    div.classList.remove('dragging');
+})
+
+div.addEventListener('dragover', e => {
+    e.preventDefault()
+    const dragCard = document.querySelector('.dragging')
+})
+
+
+// this doesn't implement the moving you will need to use the following
+
+draggingDiv.parentNode.insertBefore(draggingDiv, hoverDiv);
+
+//////////////
+
+
+
 function getGif(apiCall, promise) {
  
     fetch(apiCall) 
@@ -12,14 +39,6 @@ function getGif(apiCall, promise) {
         });
     
 }
-
-
-
-    
-
-
-
-  
 
 const form = document.getElementById("form");
 
@@ -41,6 +60,7 @@ function submitEvent(event) {
 
         let char = result.results[i].properties;
         let characterDiv = document.createElement("div");
+        characterDiv.id = "characterDivProperties";
 
         fetch(char.homeworld)
         .then(function(response) {
@@ -48,12 +68,11 @@ function submitEvent(event) {
         })
         .then(function(result) {
 
-            let html = "<h2>"+char.name+"</h2>"
-            html += "<ul class=\"properties\">"
-            html += "<li>homeworld url: "+char.homeworld+"</li>"
-            html += "<li>homeworld name: "+result.result.properties.name+"</li>"
-            html += "<li>height: "+char.height+"</li>"
-            html += "<li>eye colour: "+char.eye_color+"</li>"
+            let html = "<h2 id=\"characterName\">"+char.name+"</h2>"
+            html += "<div id=\"characterWorld\">"+result.result.properties.name+"</div>";
+            html += "<ul>"
+            html += "<div id=\"characterDetails\"><li>Height: "+char.height+"</li></div>"
+            html += "<div id=\"characterDetails\"><li>Eye Colour: "+char.eye_color+"</li></div>"
             html += "</ul>"
             characterDiv.innerHTML = html;
             resultsDiv.appendChild(characterDiv);
@@ -62,10 +81,21 @@ function submitEvent(event) {
 
             getGif("https://api.giphy.com/v1/gifs/search?api_key=J1noCVxuNpIkjrmWc9LZUCtzfUezIF8D&q="+char.name+"&limit=1&offset=0&rating=g&lang=en", function(result) {
                 result.data.forEach((gif) => {
+
+                    //main large gif
                     let img = document.createElement("img");
                     img.src = result.data[0].images.original.url;
+                    img.id = "characterGif";
                     characterDiv.appendChild(img);
+
+                    //profile circle gif
+                    let prof = document.createElement("img");
+                    prof.src = result.data[0].images.original.url;
+                    prof.id = "characterProfile";
+                    characterDiv.appendChild(prof);
+                    
                 })
+                
             });
 
 
@@ -88,10 +118,6 @@ document.addEventListener('keyup', event => {
     userSequence[currentCount] = key;
     currentCount += 1;
 
-    //testing
-    //console.log(userSequence);
-    //console.log(currentCount);
-
     //check if userSequence is correct so far
     for (let i=1; i <= currentCount; i++) {
         if (userSequence[i-1] === konamiCode[i-1]) {
@@ -99,8 +125,6 @@ document.addEventListener('keyup', event => {
             //if it isn't, reset userSequence and currentCount
             userSequence = ['null', 'null', 'null', 'null', 'null', 'null', 'null', 'null', 'null', 'null', 'null'];
             currentCount = 0;
-            console.log("Bad luck!");
-            console.log(userSequence);
             break;
             
         }
