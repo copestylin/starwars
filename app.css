@@ -4,7 +4,6 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-content: stretch;
   justify-content: center;
 }
 
@@ -15,6 +14,9 @@
     width: 350px;
     height: 340px;
     cursor: move;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 #characterDivProperties.over {
@@ -23,7 +25,7 @@
 
 #characterGif {
   position: relative;
-  top: -50px;
+  top: -65px;
   height: 175px;
   width: 350px;
   overflow: hidden;
@@ -33,25 +35,26 @@
   position: relative;
   font-family: Arial;
   left: 100px;
-  top: 20px;
+  top: 0px;
 }
 
 #characterWorld {
   position: relative;
   font-family: Arial;
   left: 100px;
+  top: -15px;
   color: #676767;
 }
 
 #characterDetails {
   position: relative;
-  top: 200px;
+  top: 180px;
   font-family: Arial;
 }
 
 #characterProfile {
   position: relative;
-  top: -368px;
+  top: -380px;
   left: -50px;
   height: 200px;
   width: 200px;
