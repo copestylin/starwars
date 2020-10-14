@@ -1,6 +1,8 @@
 
 //marc copes
 
+
+
 function handleDragStart(e) {
     this.style.opacity = '0.4';
     console.log("Dragging...");
@@ -38,12 +40,10 @@ function handleDragEnter(e) {
 
   function handleDrop(e) {
     e.stopPropagation();
-  
       if (dragSrcEl !== this) {
         dragSrcEl.innerHTML = this.innerHTML;
         this.innerHTML = e.dataTransfer.getData('text/html');
       }
-  
       return false;
     }
 
@@ -56,11 +56,8 @@ function createDragAndDropListeners() {
         item.addEventListener('dragleave', handleDragLeave, false);
         item.addEventListener('dragend', handleDragEnd, false);
         item.addEventListener('drop', handleDrop, false);
-
     });
 }
-
-
 
 function getGif(apiCall, promise) {
  
@@ -71,7 +68,6 @@ function getGif(apiCall, promise) {
         .then(function(obj) {
             promise(obj);
         });
-    
 }
 
 const form = document.getElementById("form");
@@ -80,82 +76,65 @@ function submitEvent(event) {
     event.preventDefault();
 
     let input = document.getElementById("search");
-    //console.log("value: "+input.value);
     let resultsDiv = document.getElementById("results");
-    //console.log(resultsDiv)
 
     fetch("https://www.swapi.tech/api/people/?name="+input.value)
     .then(function(response) {
         return response.json()
     })
     .then(function(result) {
-     //console.log(result);
-       for (let i=0; i < result.results.length; i++) {
 
-        let char = result.results[i].properties;
-        let characterDiv = document.createElement("div");
-        characterDiv.id = "characterDivProperties";
-        characterDiv.draggable = true;
+        for (let i=0; i < result.results.length; i++) {
 
-        
-
-
-        fetch(char.homeworld)
-        .then(function(response) {
-            return response.json()
-        })
-        .then(function(result) {
-
-
-            createDragAndDropListeners();
-
-            let html = "<h2 id=\"characterName\">"+char.name+"</h2>"
-            html += "<div id=\"characterWorld\">"+result.result.properties.name+"</div>";
-            html += "<ul>"
-            html += "<div id=\"characterDetails\"><li>Height: "+char.height+"</li></div>"
-            html += "<div id=\"characterDetails\"><li>Eye Colour: "+char.eye_color+"</li></div>"
-            html += "</ul>"
-            characterDiv.innerHTML = html;
+            let char = result.results[i].properties;
+            let characterDiv = document.createElement("div");
+            characterDiv.id = "characterDivProperties";
+            characterDiv.draggable = true;
             
-            resultsDiv.appendChild(characterDiv);
-
-            //add gif
-
-           
-
-            getGif("https://api.giphy.com/v1/gifs/search?api_key=J1noCVxuNpIkjrmWc9LZUCtzfUezIF8D&q="+char.name+"&limit=1&offset=0&rating=g&lang=en", function(result) {
-                result.data.forEach((gif) => {
-
-                    //main large gif
-                    let img = document.createElement("img");
-                    img.src = result.data[0].images.original.url;
-                    img.id = "characterGif";
-                    img.draggable = false;
-                    characterDiv.appendChild(img);
-
-                    //profile circle gif
-                    let prof = document.createElement("img");
-                    prof.src = result.data[0].images.original.url;
-                    prof.id = "characterProfile";
-                    prof.draggable = false;
-                    characterDiv.appendChild(prof);
-                    
-                })
-                
-            });
-
-            
-
-            });
-            
-       }
-
-       
-        
-    });
-
     
-}
+            fetch(char.homeworld)
+            .then(function(response) {
+                return response.json()
+            })
+            .then(function(result) {
+
+                let html = "<h2 id=\"characterName\">"+char.name+"</h2>"
+                html += "<div id=\"characterWorld\">"+result.result.properties.name+"</div>";
+                html += "<ul>"
+                html += "<div id=\"characterDetails\"><li>Height: "+char.height+"</li></div>"
+                html += "<div id=\"characterDetails\"><li>Eye Colour: "+char.eye_color+"</li></div>"
+                html += "</ul>"
+                characterDiv.innerHTML = html;
+                resultsDiv.appendChild(characterDiv);
+
+                resultsDiv.classList.add("flex-container");
+
+                createDragAndDropListeners();
+
+                //add gif
+                getGif("https://api.giphy.com/v1/gifs/search?api_key=J1noCVxuNpIkjrmWc9LZUCtzfUezIF8D&q="+char.name+"&limit=1&offset=0&rating=g&lang=en", function(result) {
+                    result.data.forEach((gif) => {
+
+                        //main large gif
+                        let img = document.createElement("img");
+                        img.src = result.data[0].images.original.url;
+                        img.id = "characterGif";
+                        img.draggable = false;
+                        characterDiv.appendChild(img);
+
+                        //profile circle gif
+                        let prof = document.createElement("img");
+                        prof.src = result.data[0].images.original.url;
+                        prof.id = "characterProfile";
+                        prof.draggable = false;
+                        characterDiv.appendChild(prof);
+                        
+                    })
+                }); 
+            });    
+        } 
+    }); 
+} 
 
 form.addEventListener("submit", submitEvent);
 

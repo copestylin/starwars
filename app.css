@@ -1,5 +1,13 @@
 
 
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: stretch;
+  justify-content: center;
+}
+
 #characterDivProperties {
     background-color: white; 
     -webkit-box-shadow: 1px 1px 6px 0px rgba(0,0,0,0.38); 
@@ -7,11 +15,11 @@
     width: 350px;
     height: 340px;
     cursor: move;
-  }
+}
 
-  #characterDivProperties.over {
-    box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.8);
-  }
+#characterDivProperties.over {
+  box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.8);
+}
 
 #characterGif {
   position: relative;
@@ -50,10 +58,3 @@
   overflow: hidden;
   clip-path: circle(30px);
 }
-
- /* 
-.properties:hover {
-    background-color: black;
-    color: white;
-}
-*/
